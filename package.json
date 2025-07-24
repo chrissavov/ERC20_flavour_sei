@@ -1,0 +1,15 @@
+{
+  "name": "erc20-token-web3",
+  "version": "1.0.0",
+  "description": "ERC20 Token deployment using Web3.js (for webcontainers)",
+  "main": "deploy.js",
+  "scripts": {
+    "deploy": "node scripts/deploy.js"
+  },
+  "dependencies": {
+    "web3": "^4.3.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,34 @@
+This is a simple ERC20 token deployment template using Web3.js with pre-compiled bytecode, configured for SEI testnet.
+
+When a user requests to deploy a simple ERC20 token:
+
+1. First, check if they provided token parameters:
+   - Name (e.g., "My Token")
+   - Symbol (e.g., "MTK")
+   - Initial Supply (e.g., 1000000)
+
+2. If parameters are missing, ask for them.
+
+3. Once you have all parameters, update scripts/deploy.js:
+   - TOKEN_NAME (line 14)
+   - TOKEN_SYMBOL (line 15)
+   - INITIAL_SUPPLY (line 16)
+
+4. For deployment:
+   - The user needs to provide their private key as an environment variable
+   - Run: PRIVATE_KEY=their_key npm run deploy
+   - No compilation needed - bytecode is pre-compiled
+
+5. IMPORTANT - This template is designed for webcontainers:
+   - Uses Web3.js
+   - Pre-compiled bytecode from audited OpenZeppelin contracts
+   - Works in browser-based environments
+   - For SEI testnet deployment, users need:
+     * Private key (without 0x prefix)
+     * SEI testnet tokens (provide faucet link: https://atlantic-2.app.sei.io/faucet)
+
+DO NOT modify the contract bytecode - it's from audited OpenZeppelin contracts.
+
+After successful deployment, show the user:
+- Contract address
+- Explorer link: https://testnet.seistream.app/contracts/CONTRACT_ADDRESS
