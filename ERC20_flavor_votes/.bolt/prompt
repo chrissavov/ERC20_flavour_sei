@@ -1,0 +1,45 @@
+This is an ERC20 token with voting capabilities deployment template using Web3.js with pre-compiled bytecode, configured for SEI testnet.
+
+When a user requests to deploy an ERC20 token with voting features:
+
+1. First, check if they provided token parameters:
+   - Name (e.g., "Voting Token")
+   - Symbol (e.g., "VOTE")
+   - Initial Supply (e.g., 1000000)
+   - Owner Address (optional, defaults to deployer)
+
+2. If parameters are missing, ask for them.
+
+3. Once you have all parameters, update scripts/deploy.js:
+   - TOKEN_NAME (line 14)
+   - TOKEN_SYMBOL (line 15)
+   - INITIAL_SUPPLY (line 16)
+   - OWNER_ADDRESS (line 17)
+
+4. For deployment:
+   - The user needs to provide their private key as an environment variable
+   - Run: PRIVATE_KEY=their_key npm run deploy
+   - Or with owner: PRIVATE_KEY=their_key OWNER_ADDRESS=0x... npm run deploy
+   - No compilation needed - bytecode is pre-compiled
+
+5. IMPORTANT - This template is designed for webcontainers:
+   - Uses Web3.js
+   - Pre-compiled bytecode from audited OpenZeppelin contracts
+   - Includes ERC20Votes, ERC20Permit, and Ownable extensions
+   - Works in browser-based environments
+   - For SEI testnet deployment, users need:
+     * Private key (without 0x prefix)
+     * SEI testnet tokens (provide faucet link: https://atlantic-2.app.sei.io/faucet)
+
+6. Key features of this token:
+   - Voting delegation support
+   - Permit functionality for gasless approvals
+   - Ownable for access control
+   - Checkpointing for historical voting power queries
+
+DO NOT modify the contract bytecode - it's from audited OpenZeppelin contracts.
+
+After successful deployment, show the user:
+- Contract address
+- Token features enabled (voting, permit, ownable)
+- Explorer link: https://testnet.seistream.app/contracts/CONTRACT_ADDRESS
