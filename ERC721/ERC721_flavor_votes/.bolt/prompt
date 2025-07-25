@@ -1,0 +1,45 @@
+This is an ERC721 NFT with voting capabilities deployment template using Web3.js with pre-compiled bytecode, configured for SEI testnet.
+
+When a user requests to deploy an ERC721 NFT with voting features:
+
+1. First, check if they provided NFT parameters:
+   - Name (e.g., "Voting NFT Collection")
+   - Symbol (e.g., "VNFT")
+   - Owner Address (optional, defaults to deployer)
+
+2. If parameters are missing, ask for them.
+
+3. Once you have all parameters, update scripts/deploy.js:
+   - NFT_NAME (line 14)
+   - NFT_SYMBOL (line 15)
+   - OWNER_ADDRESS (line 16)
+
+4. For deployment:
+   - The user needs to provide their private key as an environment variable
+   - Run: PRIVATE_KEY=their_key npm run deploy
+   - Or with owner: PRIVATE_KEY=their_key OWNER_ADDRESS=0x... npm run deploy
+   - No compilation needed - bytecode is pre-compiled
+
+5. IMPORTANT - This template is designed for webcontainers:
+   - Uses Web3.js
+   - Pre-compiled bytecode from audited OpenZeppelin contracts
+   - Includes ERC721Votes and Ownable extensions
+   - Works in browser-based environments
+   - For SEI testnet deployment, users need:
+     * Private key (without 0x prefix)
+     * SEI testnet tokens (provide faucet link: https://atlantic-2.app.sei.io/faucet)
+
+6. Key features of this NFT:
+   - Voting delegation support (each NFT = 1 vote)
+   - Checkpointing for historical voting power queries
+   - Ownable for access control
+   - Auto-incrementing token IDs
+   - safeMint function for secure minting
+   - Compatible with governance systems
+
+DO NOT modify the contract bytecode - it's from audited OpenZeppelin contracts.
+
+After successful deployment, show the user:
+- Contract address
+- NFT features enabled (voting, delegation, ownable)
+- Explorer link: https://testnet.seistream.app/contracts/CONTRACT_ADDRESS
