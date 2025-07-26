@@ -1,13 +1,13 @@
 {
-  "name": "erc721-pausable-web3",
+  "name": "erc721-pausable-ethers",
   "version": "1.0.0",
-  "description": "ERC721 Pausable NFT deployment using Web3.js (for webcontainers)",
+  "description": "ERC721 Pausable NFT deployment using ethers.js",
   "main": "deploy.js",
   "scripts": {
     "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
-    "web3": "^4.3.0"
+    "ethers": "^6.9.0"
   },
   "engines": {
     "node": ">=14.0.0"

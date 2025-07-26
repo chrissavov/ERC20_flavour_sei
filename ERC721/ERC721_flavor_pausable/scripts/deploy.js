@@ -1,4 +1,4 @@
-const { Web3 } = require('web3');
+const { ethers } = require('ethers');
 const fs = require('fs');
 const path = require('path');
 
@@ -33,63 +33,48 @@ async function main() {
       process.exit(1);
     }
 
-    // Initialize Web3
-    const web3 = new Web3(RPC_URL);
+    // Initialize provider and wallet
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
     
-    // Create account from private key
-    const account = web3.eth.accounts.privateKeyToAccount('0x' + PRIVATE_KEY.replace('0x', ''));
-    web3.eth.accounts.wallet.add(account);
-    
-    console.log(`\n🔑 Deployer: ${account.address}`);
+    console.log(`\n🔑 Deployer: ${wallet.address}`);
 
     // Determine the actual owner address
-    const actualOwner = OWNER_ADDRESS === "0x0000000000000000000000000000000000000000" ? account.address : OWNER_ADDRESS;
+    const actualOwner = OWNER_ADDRESS === "0x0000000000000000000000000000000000000000" ? wallet.address : OWNER_ADDRESS;
 
     // Check balance
-    const balance = await web3.eth.getBalance(account.address);
-    console.log(`   Balance: ${web3.utils.fromWei(balance, 'ether')} SEI`);
+    const balance = await provider.getBalance(wallet.address);
+    console.log(`   Balance: ${ethers.formatEther(balance)} SEI`);
 
-    if (balance === '0') {
+    if (balance === 0n) {
       console.error("\n❌ Error: Insufficient balance. Please get test SEI from the faucet:");
       console.log("   https://atlantic-2.app.sei.io/faucet");
       process.exit(1);
     }
 
-    // Create contract instance
-    const contract = new web3.eth.Contract(CONTRACT_ABI);
+    // Create contract factory
+    const contractFactory = new ethers.ContractFactory(CONTRACT_ABI, CONTRACT_BYTECODE, wallet);
 
     // Prepare deployment
     console.log("\n⏳ Deploying contract...");
-    const deployTx = contract.deploy({
-      data: CONTRACT_BYTECODE,
-      arguments: [NFT_NAME, NFT_SYMBOL, actualOwner]
-    });
-
-    // Estimate gas
-    const gas = await deployTx.estimateGas({ from: account.address });
-    console.log(`   Estimated gas: ${gas}`);
-
-    // Send deployment transaction
-    const gasPrice = await web3.eth.getGasPrice();
-    const gasLimit = BigInt(gas) * BigInt(120) / BigInt(100); // Add 20% buffer
     
-    const newContract = await deployTx.send({
-      from: account.address,
-      gas: gasLimit.toString(),
-      gasPrice: gasPrice.toString()
-    });
-
+    // Deploy the contract
+    const contract = await contractFactory.deploy(NFT_NAME, NFT_SYMBOL, actualOwner);
+    
+    // Wait for deployment to complete
+    await contract.waitForDeployment();
+    
     // Get the deployed contract address
-    const nftAddress = newContract.options.address;
+    const nftAddress = await contract.getAddress();
 
     console.log(`\n✅ NFT deployed successfully!`);
     console.log(`   Address: ${nftAddress}`);
 
     // Get contract details for verification
-    const name = await newContract.methods.name().call();
-    const symbol = await newContract.methods.symbol().call();
-    const owner = await newContract.methods.owner().call();
-    const paused = await newContract.methods.paused().call();
+    const name = await contract.name();
+    const symbol = await contract.symbol();
+    const owner = await contract.owner();
+    const paused = await contract.paused();
     
     console.log(`\n📊 NFT details:`);
     console.log(`   Name: ${name}`);
@@ -106,7 +91,7 @@ async function main() {
       nftSymbol: NFT_SYMBOL,
       owner: owner,
       deploymentTransaction: "See explorer for transaction details",
-      deployer: account.address,
+      deployer: wallet.address,
       deployedAt: new Date().toISOString(),
       features: {
         pausable: true,

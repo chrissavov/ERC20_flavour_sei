@@ -1,4 +1,4 @@
-const { Web3 } = require('web3');
+const { ethers } = require('ethers');
 const fs = require('fs');
 const path = require('path');
 
@@ -35,66 +35,51 @@ async function main() {
       process.exit(1);
     }
 
-    // Initialize Web3
-    const web3 = new Web3(RPC_URL);
+    // Initialize provider and wallet
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
     
-    // Create account from private key
-    const account = web3.eth.accounts.privateKeyToAccount('0x' + PRIVATE_KEY.replace('0x', ''));
-    web3.eth.accounts.wallet.add(account);
-    
-    console.log(`\n🔑 Deployer: ${account.address}`);
+    console.log(`\n🔑 Deployer: ${wallet.address}`);
 
     // Determine the actual owner address
-    const actualOwner = OWNER_ADDRESS === "0x0000000000000000000000000000000000000000" ? account.address : OWNER_ADDRESS;
+    const actualOwner = OWNER_ADDRESS === "0x0000000000000000000000000000000000000000" ? wallet.address : OWNER_ADDRESS;
 
     // Check balance
-    const balance = await web3.eth.getBalance(account.address);
-    console.log(`   Balance: ${web3.utils.fromWei(balance, 'ether')} SEI`);
+    const balance = await provider.getBalance(wallet.address);
+    console.log(`   Balance: ${ethers.formatEther(balance)} SEI`);
 
-    if (balance === '0') {
+    if (balance === 0n) {
       console.error("\n❌ Error: Insufficient balance. Please get test SEI from the faucet:");
       console.log("   https://atlantic-2.app.sei.io/faucet");
       process.exit(1);
     }
 
-    // Create contract instance
-    const contract = new web3.eth.Contract(CONTRACT_ABI);
+    // Create contract factory
+    const contractFactory = new ethers.ContractFactory(CONTRACT_ABI, CONTRACT_BYTECODE, wallet);
 
     // Prepare deployment
     console.log("\n⏳ Deploying contract...");
-    const deployTx = contract.deploy({
-      data: CONTRACT_BYTECODE,
-      arguments: [TOKEN_NAME, TOKEN_SYMBOL, INITIAL_SUPPLY, actualOwner]
-    });
-
-    // Estimate gas
-    const gas = await deployTx.estimateGas({ from: account.address });
-    console.log(`   Estimated gas: ${gas}`);
-
-    // Send deployment transaction
-    const gasPrice = await web3.eth.getGasPrice();
-    const gasLimit = BigInt(gas) * BigInt(120) / BigInt(100); // Add 20% buffer
     
-    const newContract = await deployTx.send({
-      from: account.address,
-      gas: gasLimit.toString(),
-      gasPrice: gasPrice.toString()
-    });
-
+    // Deploy the contract
+    const contract = await contractFactory.deploy(TOKEN_NAME, TOKEN_SYMBOL, INITIAL_SUPPLY, actualOwner);
+    
+    // Wait for deployment to complete
+    await contract.waitForDeployment();
+    
     // Get the deployed contract address
-    const tokenAddress = newContract.options.address;
+    const tokenAddress = await contract.getAddress();
 
     console.log(`\n✅ Token deployed successfully!`);
     console.log(`   Address: ${tokenAddress}`);
 
     // Get decimals and total supply for verification
-    const decimals = await newContract.methods.decimals().call();
-    const totalSupply = await newContract.methods.totalSupply().call();
-    const owner = await newContract.methods.owner().call();
+    const decimals = await contract.decimals();
+    const totalSupply = await contract.totalSupply();
+    const owner = await contract.owner();
     
     console.log(`\n📊 Token details:`);
     console.log(`   Decimals: ${decimals}`);
-    console.log(`   Total Supply: ${web3.utils.fromWei(totalSupply, 'ether')} ${TOKEN_SYMBOL}`);
+    console.log(`   Total Supply: ${ethers.formatEther(totalSupply)} ${TOKEN_SYMBOL}`);
     console.log(`   Owner: ${owner}`);
     console.log(`   Voting Features: ✅ Enabled`);
 
@@ -109,7 +94,7 @@ async function main() {
       totalSupply: totalSupply.toString(),
       owner: owner,
       deploymentTransaction: "See explorer for transaction details",
-      deployer: account.address,
+      deployer: wallet.address,
       deployedAt: new Date().toISOString(),
       features: {
         votes: true,
