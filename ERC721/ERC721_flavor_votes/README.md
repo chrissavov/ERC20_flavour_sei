@@ -1,6 +1,6 @@
-# ERC721 Votes NFT Deployment (Web3.js)
+# ERC721 Votes NFT Deployment (ethers.js)
 
-Deploy an ERC721 NFT with voting capabilities to SEI testnet using pre-compiled bytecode. Works in webcontainers!
+Deploy an ERC721 NFT with voting capabilities to SEI testnet using pre-compiled bytecode with ethers.js.
 
 ## Quick Deploy
 
@@ -18,14 +18,15 @@ Edit in `scripts/deploy.js`:
 
 ## Requirements
 
-- Private key (no 0x prefix)
+- Private key (with or without 0x prefix)
 - SEI testnet tokens: https://atlantic-2.app.sei.io/faucet
 
 ## Features
 
 - Pre-compiled OpenZeppelin ERC721Votes bytecode
-- No Hardhat/native dependencies needed
-- Works in browser environments
+- Uses ethers.js for modern Web3 interactions
+- No compilation needed - pre-compiled bytecode
+- Works in both Node.js and browser environments
 - **Voting delegation support**
 - **Checkpointing for historical voting power**
 - **Ownable (access control)**

@@ -1,4 +1,4 @@
-This is an ERC721 NFT with pausable functionality deployment template using Web3.js with pre-compiled bytecode, configured for SEI testnet.
+This is an ERC721 NFT with pausable functionality deployment template using ethers.js with pre-compiled bytecode, configured for SEI testnet.
 
 When a user requests to deploy an ERC721 NFT with pausable features:
 
@@ -20,13 +20,13 @@ When a user requests to deploy an ERC721 NFT with pausable features:
    - Or with owner: PRIVATE_KEY=their_key OWNER_ADDRESS=0x... npm run deploy
    - No compilation needed - bytecode is pre-compiled
 
-5. IMPORTANT - This template is designed for webcontainers:
-   - Uses Web3.js
+5. IMPORTANT - This template uses ethers.js:
+   - Uses ethers.js for better TypeScript support and cleaner API
    - Pre-compiled bytecode from audited OpenZeppelin contracts
    - Includes Pausable and Ownable extensions
-   - Works in browser-based environments
+   - Works in both Node.js and browser environments
    - For SEI testnet deployment, users need:
-     * Private key (without 0x prefix)
+     * Private key (with or without 0x prefix)
      * SEI testnet tokens (provide faucet link: https://atlantic-2.app.sei.io/faucet)
 
 6. Key features of this NFT:

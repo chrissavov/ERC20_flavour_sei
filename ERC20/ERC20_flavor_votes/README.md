@@ -1,6 +1,6 @@
-# ERC20 Votes Token Deployment (Web3.js)
+# ERC20 Votes Token Deployment (ethers.js)
 
-Deploy an ERC20 token with voting capabilities to SEI testnet using pre-compiled bytecode. Works in webcontainers!
+Deploy an ERC20 token with voting capabilities to SEI testnet using pre-compiled bytecode with ethers.js.
 
 ## Quick Deploy
 
@@ -19,14 +19,15 @@ Edit in `scripts/deploy.js`:
 
 ## Requirements
 
-- Private key (no 0x prefix)
+- Private key (with or without 0x prefix)
 - SEI testnet tokens: https://atlantic-2.app.sei.io/faucet
 
 ## Features
 
 - Pre-compiled OpenZeppelin ERC20Votes bytecode
-- No Hardhat/native dependencies needed
-- Works in browser environments
+- Uses ethers.js for modern Web3 interactions
+- No compilation needed - pre-compiled bytecode
+- Works in both Node.js and browser environments
 - 18 decimal places
 - Initial supply minted to deployer
 - **Voting delegation support**
