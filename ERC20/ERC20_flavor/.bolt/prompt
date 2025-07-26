@@ -29,6 +29,4 @@ When a user requests to deploy a simple ERC20 token:
 
 DO NOT modify the contract bytecode - it's from audited OpenZeppelin contracts.
 
-After successful deployment, show the user:
-- Contract address
-- Explorer link: https://testnet.seistream.app/contracts/CONTRACT_ADDRESS
+This project will go a long with a front-end UI. Generate a token dashboard with balance display, transfer functionality, and transaction history.

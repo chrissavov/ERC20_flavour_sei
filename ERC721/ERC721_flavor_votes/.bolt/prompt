@@ -39,7 +39,4 @@ When a user requests to deploy an ERC721 NFT with voting features:
 
 DO NOT modify the contract bytecode - it's from audited OpenZeppelin contracts.
 
-After successful deployment, show the user:
-- Contract address
-- NFT features enabled (voting, delegation, ownable)
-- Explorer link: https://testnet.seistream.app/contracts/CONTRACT_ADDRESS
+This project will go along with a front-end UI. Generate an NFT dashboard with collection viewer, minting interface, and admin pause controls.

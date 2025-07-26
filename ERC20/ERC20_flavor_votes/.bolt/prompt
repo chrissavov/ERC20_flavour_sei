@@ -39,7 +39,4 @@ When a user requests to deploy an ERC20 token with voting features:
 
 DO NOT modify the contract bytecode - it's from audited OpenZeppelin contracts.
 
-After successful deployment, show the user:
-- Contract address
-- Token features enabled (voting, permit, ownable)
-- Explorer link: https://testnet.seistream.app/contracts/CONTRACT_ADDRESS
+This project will go along with a front-end UI. Generate a token dashboard with balance display, transfer functionality, transaction history and any other functionalities made avaiable from this smart contract.
